@@ -44,13 +44,6 @@
             </a>
         </li>
 
-        {{-- <li class="nav-item">
-            <a class="nav-link @if(Route::currentRouteName()=='produksi') active @endif" href="{{route('produksi')}}">
-                <i class="bi bi-grid"></i>
-                <span>Produksi</span>
-            </a>
-        </li> --}}
-
 
 
     </ul>
