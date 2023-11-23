@@ -5,6 +5,47 @@
     <div class="row">
         <div class="col-12">
             <div class="card border-primary border-top border-3 border-0 p-3">
+                <div class="card-header">
+                    <div class="row">
+
+                        <div class="col-3">
+                            <div class="mb-0">
+                                <label for="" class="form-label">Select SHAPE</label>
+                                <select data-name="shape" class="form-select select2">
+                                    @foreach ($shape as $key => $value)
+                                        <option value="{{$value->id}}">{{ $value->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-3">
+                            <div class="mb-0">
+                                <label for="" class="form-label">Select Material</label>
+                                <select data-name="material" class="form-select select2" id="material_select">
+                                    @foreach ($material as $key => $value)
+                                        <option value="{{ $value->id }}">{{ $value->grade }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-center">
+                        <h6 class="mb-0" id="material_name"></h6>
+                    </div>
+                    <figure class="highcharts-figure m-0">
+                        <div id="chartquartal"></div>
+                    </figure>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="card border-primary border-top border-3 border-0 p-3">
                 <div class="d-flex justify-content-end mb-3">
                     <button type="button" class="btn btn-outline-primary px-5" data-name="add_data"><i class='bx bx-yen mr-1'></i>Add</button>
                 </div>
@@ -595,12 +636,193 @@
 </script>
 {{-- End JS Add Data --}}
 
+<script>
+    $(document).ready(function() {
+        setTimeout(updatechartquartal);
+    });
+</script>
+
+{{-- JS Quartal --}}
+<script>
+    $(document).on("change", "[data-name='shape']", function(e) {
+        var id = $(this).val();
+        var table = 'mst_material';
+        var field = 'shape';
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('actionlistdata') }}",
+            data: {
+                id: id,
+                table: table,
+                field: field
+            },
+            cache: false,
+            success: function(data) {
+                // console.log(data);
+                var html = '';
+                $.each(data, function(i, val) {
+                    html += '<option value="'+val.id+'">' + val.grade + '</option>';
+                });
+                $('#material_select').html(html);
+            },
+            error: function(data) {
+                Swal.fire({
+                    position: 'center',
+                    title: 'Action Not Valid!',
+                    icon: 'warning',
+                    showConfirmButton: true,
+                    // timer: 1500
+                }).then((data) => {
+                    // location.reload();
+                })
+            }
+        });
+    });
+
+    $(document).on("change", "[data-name='material']", function(e) {
+        var id = $(this).val();
+        updatechartquartal(id);
+    });
+
+    Highcharts.chart('chartquartal', {
+        chart: {
+            type: 'line'
+        },
+        title: {
+            text: ''
+        },
+        exporting: {
+            enabled: false
+        },
+        credits: {
+            enabled: false
+        },
+        xAxis: {
+            categories: []
+        },
+        yAxis: [{
+            title: {
+                text: null
+            },
+            labels: {
+                format: '¥{value}'
+            }
+        }, {
+            title: {
+                text: null
+            },
+            labels: {
+                format: '¥{value}'
+            },
+            opposite: true
+        }],
+        tooltip: {
+            headerFormat: '<span>{point.key}</span><br>',
+            pointFormat: '<span style="color:{series.color};">{series.name}:</span>&nbsp;&nbsp;<span>¥{point.y}</span><br>',
+            footerFormat: '</table>',
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            line: {
+                dataLabels: {
+                    enabled: true,
+                    format: '¥{y}'
+                }
+            }
+        },
+        series: [{
+            name: 'Base',
+            color: '#47A992',
+            marker: {
+                enabled: false
+            },
+            data: []
+        }, {
+            name: 'Alloy Surcharger',
+            yAxis: 1,
+            color: '#0E2954',
+            marker: {
+                enabled: false
+            },
+            data: []
+        }, {
+            name: 'CNF',
+            color: '#CD1818',
+            marker: {
+                enabled: false
+            },
+            data: []
+        }, {
+            name: 'Freight',
+            yAxis: 1,
+            color: '#4E31AA',
+            marker: {
+                enabled: false
+            },
+            data: []
+        }]
+    });
+
+    var timeouts = {};
+    function updatechartquartal(id) {
+        var id = id;
+        var chart = $('#chartquartal').highcharts();
+        $.ajax({
+            url: "{{ route('dataquartal') }}",
+            type: "POST",
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            global: false,
+            cache: false,
+            success: function(data) {
+                // console.log(data);
+                $("#material_name").text(data.material_name);
+                // chart.xAxis[0].setCategories(data.category);
+                chart.xAxis[0].update({
+                    categories: data.category
+                });
+                chart.series[0].setData(data.dt_base);
+                chart.series[1].setData(data.dt_alloy);
+                chart.series[2].setData(data.dt_cnf);
+                chart.series[3].setData(data.dt_freight);
+                // Check if start and end are undefined
+                if (id === undefined) {
+                    // If timeout for this id already exists, clear it
+                    if (timeouts['quartal']) {
+                        clearTimeout(timeouts['quartal']);
+                    }
+                    // Set a new timeout for this id
+                    timeouts['quartal'] = setTimeout(function () {
+                        updatechartquartal();
+                    }, 1000); // call updateChart every 3 seconds
+                }
+            },
+            complete: function(data) {
+                // setTimeout(updatechartquartal, 1000);
+                if (id !== undefined ) {
+                    clearTimeout(timeouts['quartal']);
+                }
+            }
+        });
+    }
+</script>
+{{-- End JS Quartal --}}
+
 {{-- Select2 --}}
 <script>
     $(".select-2-add").select2({
         allowClear: false,
         width: '100%',
         dropdownParent: $("#modal_add")
+    });
+
+    $(".select2").select2({
+        allowClear: false,
+        width: '100%'
     });
 </script>
 {{-- End Select2 --}}
