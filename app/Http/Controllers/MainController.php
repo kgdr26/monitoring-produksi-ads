@@ -185,11 +185,19 @@ class MainController extends Controller
         $arr        = DB::select("SELECT a.*, b.grade AS material_name, c.name AS shape_name FROM trx_quartal a LEFT JOIN mst_material b ON a.id_material=b.id LEFT JOIN mst_shape c ON b.shape=c.id ORDER BY a.thn DESC");
         $material   = DB::select("SELECT * FROM mst_material WHERE shape=1 AND is_active=1");
         $shape      = DB::select("SELECT * FROM mst_shape WHERE is_active=1");
+
+        if(Auth::check()) {
+            $display    = 'none';
+        }else{
+            $display    = 'block';
+        }
+
         $data = array(
             'title'     => 'Quartal',
             'arr'       => $arr,
             'material'  => $material,
-            'shape'     => $shape
+            'shape'     => $shape,
+            'display'   => $display
         );
 
         return view('Produksi.masterbaseprice')->with($data);

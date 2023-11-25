@@ -1,7 +1,7 @@
 @extends('main')
 @section('content')
 
-<section class="section dashboard">
+<section class="section dashboard card-sesion">
     <div class="row">
         <div class="col-12">
             <div class="card border-primary border-top border-3 border-0 p-3">
@@ -242,6 +242,56 @@
                             @endforeach
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-form-login" style="display: {{$display}}">
+        <div class="row justify-content-center w-100">
+            <div class="col-lg-4 col-md-6 d-flex flex-column">
+
+                <div class="d-flex justify-content-center py-4">
+                    <a href="" class="logo d-flex w-auto">
+                        <img src="assets/img/logo.png" alt="">
+                        <span class="d-none d-lg-block">Monitoring</span>
+                    </a>
+                </div>
+                <div class="d-flex justify-content-center py-4">
+                    @if(session('error'))
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>Gagal Login !</strong> {{ Session::get('error') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+                </div>
+
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="pt-4 pb-2">
+                            <h5 class="card-title text-center pb-0 fs-4">Access required</h5>
+                            <p class="text-center small">Enter your username & password to login</p>
+                        </div>
+
+                        <form class="row g-3 needs-validation" novalidate action="{{route('login_post')}}" method="POST">
+                            @csrf
+                            <div class="col-12">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" name="username" class="form-control" id="username" required>
+                                <div class="invalid-feedback">Please enter your username.</div>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="yourPassword" class="form-label">Password</label>
+                                <input type="password" name="password" class="form-control" id="yourPassword" required>
+                                <div class="invalid-feedback">Please enter your password.</div>
+                            </div>
+
+                            <div class="col-12">
+                                <button class="btn btn-primary w-100" type="submit">Login</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

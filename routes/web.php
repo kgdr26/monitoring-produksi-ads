@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,6 +58,10 @@ Route::get('ppicschedule', [MainController::class, 'ppicschedule'])->name('ppics
 Route::get('prodoutput', [MainController::class, 'prodoutput'])->name('prodoutput');
 Route::get('prodefisiensi', [MainController::class, 'prodefisiensi'])->name('prodefisiensi');
 Route::get('prodmanpower', [MainController::class, 'prodmanpower'])->name('prodmanpower');
+ 
+Route::get('login', [AuthController::class, 'ShowFormLogin'])->name('login');
+Route::post('login_post', [AuthController::class, 'login'])->name('login_post');
+Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('masterbaseprice', [MainController::class, 'masterbaseprice'])->name('masterbaseprice');
 
 

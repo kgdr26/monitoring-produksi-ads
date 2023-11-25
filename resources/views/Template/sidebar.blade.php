@@ -10,7 +10,7 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="{{route('masterbaseprice')}}">
+            <a class="nav-link collapsed" href="{{route('logout')}}">
                 <i class="bi bi-cash-stack"></i>
                 <span>Master Base Price</span>
             </a>
