@@ -1,6 +1,8 @@
 @extends('main')
 @section('content')
 
+{{-- section --}}
+
 <section class="section dashboard card-sesion">
     <div class="row">
         <div class="col-12">
