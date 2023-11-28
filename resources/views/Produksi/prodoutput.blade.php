@@ -439,10 +439,12 @@
         var t_pcs       = $('[data-name="t_pcs"]').val();
         var t_kg        = $('[data-name="t_kg"]').val();
 
-        if(jml_wo > t_wo || pcs > t_pcs || kg > t_kg ){
+        // console.log(t_wo+'-'+t_pcs+'-'+t_kg+'-'+jml_wo+'-'+pcs+'-'+kg);
+
+        if(parseInt(jml_wo) > parseInt(t_wo) || parseInt(pcs) > parseInt(t_pcs) || parseInt(kg) > parseInt(t_kg) ){
             Swal.fire({
                 position:'center',
-                title: 'Action Not Valid!',
+                title: 'Action Not Valid bigger data!',
                 icon: 'warning',
                 showConfirmButton: true,
             })
@@ -589,18 +591,18 @@
                 $('[data-name="t_pcs"]').val(data.t_pcs);
                 $('[data-name="t_kg"]').val(data.t_kg);
 
-                if(data.t_wo > data.o_wo){
+                if(parseInt(data.t_wo) != 0){
                     $('[data-name="jml_wo"]').removeAttr("readonly");
                 }else{
                     $('[data-name="jml_wo"]').attr("readonly", "readonly");
                 }
 
-                if(data.t_pcs > data.o_pcs){
+                if(parseInt(data.t_pcs) != 0){
                     $('[data-name="jml_pcs"]').removeAttr("readonly");
                 }else{
                     $('[data-name="jml_pcs"]').attr("readonly", "readonly");
                 }
-                if(data.t_kg > data.o_kg){
+                if(parseInt(data.t_kg) != 0){
                     $('[data-name="jml_kg"]').removeAttr("readonly");
                 }else{
                     $('[data-name="jml_kg"]').attr("readonly", "readonly");
@@ -659,7 +661,7 @@
             data: {date:date},
             cache: false,
             success: function(data) {
-                console.log(data);
+                // console.log(data);
                 var html = '<option value="">Select Machine</option>';
                 data.forEach(function(data) {
                     html += '<option value="'+data.id+'">'+data.name+' ('+data.type+')</option>';
