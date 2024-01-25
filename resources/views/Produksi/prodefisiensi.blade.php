@@ -41,8 +41,8 @@
                         <thead>
                             <tr>
                                 <th scope="col">NO</th>
-                                <th scope="col">Machine</th>
                                 <th scope="col">Shift</th>
+                                <th scope="col">Machine</th>
                                 <th scope="col">Duration</th>
                                 <th scope="col">Date</th>
                                 <th scope="col">Datetime Input</th>
@@ -212,6 +212,11 @@
             // data: [20, 40, 60, 80, 100, 80],
             data: [],
             color: '#00A9FF'
+        },{
+            name: 'AVG',
+            // data: [20, 40, 60, 80, 100, 80],
+            data: [],
+            color: '#65B741'
         }]
     });
 
@@ -237,6 +242,7 @@
                 });
                 chart.series[0].setData(data.shift1);
                 chart.series[1].setData(data.shift2);
+                chart.series[2].setData(data.avg);
                 
                 // Check if start and end are undefined
                 if (id === undefined) {

@@ -119,6 +119,7 @@
                 $shift2     = DB::table('trx_eff_machine')->selectRaw('SUM(waktu) as jml')->where('date', $date_now)->where('id_mc', $val->id)->where('shift', '2')->first();
                 $dshift1[]  = ((int)$shift1->jml/8)*100;
                 $dshift2[]  = ((int)$shift2->jml/7)*100;
+                $avg[]      = ((((int)$shift1->jml/8)+((int)$shift2->jml/7))/2)*100;
             }
         }else{
             $start_timestamp    = strtotime($start);
@@ -135,12 +136,14 @@
                 $shift2     = DB::table('trx_eff_machine')->selectRaw('SUM(waktu) as jml')->where('date', $tanggal)->where('id_mc', $id)->where('shift', '2')->first();
                 $dshift1[]  = ((int)$shift1->jml/8)*100;
                 $dshift2[]  = ((int)$shift2->jml/7)*100;
+                $avg[]      = ((((int)$shift1->jml/8)+((int)$shift2->jml/7))/2)*100;
             }
         }
 
         $data['category']   = $cat;
         $data['shift1']     = $dshift1;
         $data['shift2']     = $dshift2;
+        $data['avg']        = $avg;
         return $data;
     }
 
